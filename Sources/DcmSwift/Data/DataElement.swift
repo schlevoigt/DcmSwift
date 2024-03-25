@@ -42,7 +42,7 @@ public class DataElement : DicomObject {
     
     
     
-    init(withTag tag:DataTag, parent:DataElement? = nil) {
+    public init(withTag tag:DataTag, parent:DataElement? = nil) {
         self.tag = tag
         
         if let vr = DicomSpec.shared.vrForTag(withCode: tag.code) {
@@ -55,7 +55,7 @@ public class DataElement : DicomObject {
     }
     
     
-    init(withTag tag:DataTag, dataset:DataSet? = nil, parent:DataElement? = nil) {
+    public init(withTag tag:DataTag, dataset:DataSet? = nil, parent:DataElement? = nil) {
         self.dataset    = dataset
         self.tag        = tag
         
@@ -65,7 +65,7 @@ public class DataElement : DicomObject {
     }
     
     
-    init?(withTagName name:String, dataset:DataSet, parent:DataElement? = nil) {
+    public init?(withTagName name:String, dataset:DataSet, parent:DataElement? = nil) {
         if let t = DicomSpec.shared.dataTag(forName: name) {
             self.vr     = DicomSpec.shared.vrForTag(withCode: t.code)!
             self.tag    = t
