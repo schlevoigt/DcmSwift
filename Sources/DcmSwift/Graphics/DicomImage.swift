@@ -7,26 +7,33 @@
 //
 
 import Foundation
-import Quartz
-
-
 
 #if os(macOS)
+import Quartz
 import AppKit
-#elseif os(iOS)
-import UIKit
-#endif
-
 
 extension NSImage {
     var png: Data? { tiffRepresentation?.bitmap?.png }
 }
+
 extension NSBitmapImageRep {
     var png: Data? { representation(using: .png, properties: [:]) }
 }
+
 extension Data {
     var bitmap: NSBitmapImageRep? { NSBitmapImageRep(data: self) }
 }
+#elseif os(iOS)
+import UIKit
+
+extension UIImage {
+    var png: Data? { self.pngData() }
+}
+extension Data {
+    var bitmap: UIImage? { UIImage(data: self) }
+}
+#endif
+
 /**
  DicomImage is a wrapper that provides images related features for the DICOM standard.
  Please refer to dicomiseasy : http://dicomiseasy.blogspot.com/2012/08/chapter-12-pixel-data.html
@@ -204,31 +211,6 @@ public class DicomImage {
         return nil
     }
     
-#elseif os(iOS)
-    /**
-     Creates an `UIImage` for a given frame
-     - Important: only for `iOS`
-     */
-    public func image(forFrame frame: Int) -> UIImage? {
-        if !frames.indices.contains(frame) { return nil }
-
-        let size = NSSize(width: self.columns, height: self.rows)
-        let data = self.frames[frame]
-
-        if let cgim = self.imageFromPixels(size: size, pixels: data.toUnsigned8Array(), width: self.columns, height: self.rows) {
-            return UIImage(cgImage: cgim, size: size)
-        }
-
-        return nil
-    }
-#endif
-    
-    
-    
-    
-    
-    // MARK: - Private
-    
     private func imageFromPixels(size: NSSize, pixels: UnsafeRawPointer, width: Int, height: Int) -> CGImage? {
         var bitmapInfo:CGBitmapInfo = []
         //var __:UnsafeRawPointer = pixels
@@ -288,9 +270,56 @@ public class DicomImage {
         
         return nil
     }
+#elseif os(iOS)
+    /**
+     Creates an `UIImage` for a given frame
+     - Important: only for `iOS`
+     */
+    public func image(forFrame frame: Int = 0) -> UIImage? {
+       guard frames.indices.contains(frame) else { return nil }
+       
+       let data = self.frames[frame]
+       
+       if let cgImage = self.imageFromPixels(data: data) {
+           return UIImage(cgImage: cgImage)
+       }
+       
+       return nil
+   }
+    
+    private func imageFromPixels(data: Data) -> CGImage? {
+        // Asumiendo que los datos de píxeles ya están en el formato correcto,
+        // este método deberá ser adaptado según cómo necesites procesar los datos de píxeles.
+        
+        let width = self.columns
+        let height = self.rows
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.noneSkipLast.rawValue)
+        let bitsPerComponent = 8
+        let bitsPerPixel = 32
+        let bytesPerRow = width * 4 // Por ejemplo, para RGBA
+        
+        guard let providerRef = CGDataProvider(data: data as CFData) else { return nil }
+        let cgim = CGImage(width: width,
+                           height: height,
+                           bitsPerComponent: bitsPerComponent,
+                           bitsPerPixel: bitsPerPixel,
+                           bytesPerRow: bytesPerRow,
+                           space: colorSpace,
+                           bitmapInfo: bitmapInfo,
+                           provider: providerRef,
+                           decode: nil,
+                           shouldInterpolate: true,
+                           intent: .defaultIntent)
+        return cgim
+    }
+#endif
     
     
     
+    
+    
+    // MARK: - Private
     
     private func processPresentationValues(pixels: [UInt8]) -> [UInt8] {
         var output:[UInt8] = pixels
@@ -354,10 +383,11 @@ public class DicomImage {
                 url.appendPathComponent(baseFilename + String(frame) + ".png")
                 Logger.debug(url.absoluteString)
                 
-                image.setName(url.absoluteString)
                 
                 // image() gives different class following the OS
                 #if os(macOS)
+                image.setName(url.absoluteString)
+
                 if let data = image.png {
                     try? data.write(to: url)
                 }

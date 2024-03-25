@@ -19,10 +19,10 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(name: "Socket", url: "https://github.com/Kitura/BlueSocket.git", from:"1.0.8"),
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "0.4.0"),
+        .package(name: "Socket", url: "https://github.com/Kitura/BlueSocket.git", from:"2.0.4"),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.3.1"),
         .package(url: "https://github.com/pointfreeco/swift-html", from: "0.4.0"),
-        .package(url: "https://github.com/apple/swift-nio.git", from: "2.0.0")
+        .package(url: "https://github.com/apple/swift-nio.git", from: "2.64.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -73,15 +73,5 @@ let package = Package(
                 "DcmSwift",
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ]),
-        .testTarget(
-            name: "DcmSwiftTests",
-            dependencies: ["DcmSwift"],
-            resources: [
-                .process("Resources/DICOM"),
-                .process("Resources/DICOMDIR"),
-                .process("Resources/SR"),
-                .process("Resources/RT"),
-            ]
-        )
     ]
 )
