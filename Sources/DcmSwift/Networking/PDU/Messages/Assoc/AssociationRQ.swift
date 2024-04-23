@@ -183,6 +183,7 @@ public class AssociationRQ: PDUMessage {
                     debugDescription.append("    -> Remote Max PDU: \(response.association.maxPDULength)\n")
                     debugDescription.append("    -> Implementation class UID: \(response.association.remoteImplementationUID ?? "")\n")
                     debugDescription.append("    -> Implementation version: \(self.association.remoteImplementationVersion ?? "")\n")
+                    Logger.info(debugDescription)
 
                     return response
                 }

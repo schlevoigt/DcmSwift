@@ -32,7 +32,7 @@ public class DataSet: DicomObject {
     
     
     public override init() {
-        transferSyntax = TransferSyntax(TransferSyntax.explicitVRLittleEndian)
+        transferSyntax = TransferSyntax(TransferSyntax.implicitVRLittleEndian)
     }
             
     /**

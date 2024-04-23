@@ -161,7 +161,7 @@ public class DicomAssociation: ChannelInboundHandler {
     public var acceptedPresentationContexts:[UInt8 : PresentationContext] = [:]
     public var userInfo:UserInfo = UserInfo()
     
-    public var preferredTransferSyntax:TransferSyntax? = TransferSyntax(TransferSyntax.explicitVRLittleEndian)
+    public var preferredTransferSyntax:TransferSyntax? = TransferSyntax(TransferSyntax.implicitVRLittleEndian)
     public var acceptedTransferSyntax:String?
     public var remoteMaxPDULength:Int = 0
     public var remoteImplementationUID:String?

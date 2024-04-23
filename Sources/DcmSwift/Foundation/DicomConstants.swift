@@ -66,6 +66,8 @@ public struct DicomConstants {
     public static let PatientRootQueryRetrieveInformationModelFIND  = "1.2.840.10008.5.1.4.1.2.1.1"
     public static let PatientRootQueryRetrieveInformationModelMOVE  = "1.2.840.10008.5.1.4.1.2.1.2"
     public static let PatientRootQueryRetrieveInformationModelGET   = "1.2.840.10008.5.1.4.1.2.1.3"
+    // Abstract Syntax: [UID: 1.2.840.10008.5.1.4.31] [Name: Modality Worklist Information Model - FIND] RoleNegotiation not supported
+    //public static let StudyRootQueryRetrieveInformationModelFIND    = "1.2.840.10008.5.1.4.31"
     public static let StudyRootQueryRetrieveInformationModelFIND    = "1.2.840.10008.5.1.4.1.2.2.1"
     public static let StudyRootQueryRetrieveInformationModelMOVE    = "1.2.840.10008.5.1.4.1.2.2.2"
     public static let StudyRootQueryRetrieveInformationModelGET     = "1.2.840.10008.5.1.4.1.2.2.3"
